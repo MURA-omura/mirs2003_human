@@ -1,8 +1,16 @@
+##
+# @file detection.py
+# @author 村尾
+# @date 2020/11/11
+
+
 import cv2
 
 
+##
+# @brief 人検出クラス
+# @details カメラからキャプチャをし、そこから人がいる領域にバウンディングボックスを描画する
 class Detection():
-    # Pretrained classes in the model
     classNames = {0: 'background',
                   1: 'person', 2: 'bicycle', 3: 'car', 4: 'motorcycle', 5: 'airplane', 6: 'bus',
                   7: 'train', 8: 'truck', 9: 'boat', 10: 'traffic light', 11: 'fire hydrant',
@@ -21,19 +29,35 @@ class Detection():
                   80: 'toaster', 81: 'sink', 82: 'refrigerator', 84: 'book', 85: 'clock',
                   86: 'vase', 87: 'scissors', 88: 'teddy bear', 89: 'hair drier', 90: 'toothbrush'}
 
+    ##
+    # @brief コンストラクタ
+    # @details カメラをオープンする
+    # @return None
     def __init__(self):
         self.model = cv2.dnn.readNetFromTensorflow('../model/ssd_mobilenet_v2.pb', '../model/ssd_mobilenet_v2.pbtxt')
-        self.cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+        self.cap = cv2.VideoCapture(0)
         if not self.cap.isOpened():
             raise IOError('Cannot open camera')
-        _, image= self.cap.read()
+        self.cap.set(cv2.CAP_PROP_FPS, 5)
+        self.cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
+        self.cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('H', '2', '6', '4'))
+        _, image = self.cap.read()
         self.image_height, self.image_width, _ = image.shape
 
-    def get_name(self, class_id, classes):
-        for key, value in classes.items():
+    ##
+    # @brief ラベル取得メソッド
+    # @details 入力されたidに対応するラベルを返す
+    # @param class_id ラベルID
+    # @return value ラベル名
+    def getName(self, class_id):
+        for key, value in self.classNames.items():
             if class_id == key:
                 return value
 
+    ##
+    # @brief 人検出メソッド
+    # @details カメラからキャプチャし、人を検出する
+    # @return None
     def detect(self):
         _, image= self.cap.read()
         self.model.setInput(cv2.dnn.blobFromImage(image, size=(300, 300), swapRB=True))
@@ -42,7 +66,7 @@ class Detection():
             confidence = detection[2]
             if confidence > .5:
                 class_id = detection[1]
-                class_name = self.get_name(class_id, self.classNames)
+                class_name = self.getName(class_id)
                 print(str(str(class_id) + " " + str(detection[2])  + " " + class_name))
                 box_x = detection[3] * self.image_width
                 box_y = detection[4] * self.image_height
@@ -51,6 +75,10 @@ class Detection():
                 cv2.rectangle(image, (int(box_x), int(box_y)), (int(box_width), int(box_height)), (23, 230, 210), thickness=1)
                 cv2.putText(image, class_name, (int(box_x), int(box_y+.05*self.image_height)), cv2.FONT_HERSHEY_SIMPLEX, (.005*self.image_width), (0, 0, 255))
 
+    ##
+    # @brief リリース関数
+    # @details カメラをリリースする
+    # @return None
     def release(self):
         self.cap.release()
         cv2.destroyAllWindows()

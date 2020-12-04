@@ -36,7 +36,7 @@ class Display():
     # @param state タピ郎の走行状態
     # @return None
     def changeImage(self, state: int):
-        img_name = ['../image/alcohol.jpg', '../image/window.jpg']
+        img_name = ['../image/sleep.png', '../image/normal.png', '../image/alcohol.jpg', '../image/window.jpg']
         self.img = Image.open(img_name[state])
         self.img.thumbnail((self.width, self.height), Image.ANTIALIAS)
         self.img = ImageTk.PhotoImage(self.img)

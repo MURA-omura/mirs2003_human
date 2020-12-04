@@ -79,8 +79,8 @@ class Detection():
                     target_pos.append([(detection[3] + detection[5]) / 2, detection[6]])
                 cv2.rectangle(image, (int(box_x), int(box_y)), (int(box_width), int(box_height)), (23, 230, 210), thickness=1)
                 cv2.putText(image, class_name, (int(box_x), int(box_y+.05*self.image_height)), cv2.FONT_HERSHEY_SIMPLEX, (.005*self.image_width), (0, 0, 255))
-        power = target.setTarget(target_pos)
-        return power
+        power = self.target.setTarget(target_pos)
+        return int(power)
 
     ##
     # @brief リリース関数

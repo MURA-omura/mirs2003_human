@@ -36,11 +36,11 @@ def main():
 
         # 走行プログラムと送信
         sock.sendall(motor_power.to_bytes(2, 'big'))
-        byte_data = sock.recv(8)
-        #state = int(byte_data.decode('utf-8'))
+        byte_data = sock.recv(2)
+        print(byte_data)
         state = int.from_bytes(byte_data, 'big')
 
-        print(state, state_before)
+        print(state)
         if state != state_before:
             dp.changeImage(state)
             ad.play(state)

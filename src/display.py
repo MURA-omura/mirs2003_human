@@ -19,7 +19,8 @@ class Display():
         self.img = None
         self.window = tk.Tk()
         self.window.title('タピ郎')
-        self.window.state('zoomed')
+        self.window.attributes('-fullscreen', True)
+        #self.window.state('zoomed')
         self.width = self.window.winfo_screenwidth()
         self.height = self.window.winfo_screenheight()
         self.img = Image.open('../image/alcohol.jpg')
@@ -36,7 +37,7 @@ class Display():
     # @param state タピ郎の走行状態
     # @return None
     def changeImage(self, state: int):
-        img_name = ['../image/sleep.png', '../image/normal.png', '../image/alcohol.jpg', '../image/window.jpg']
+        img_name = ['../image/normal.png', '../image/normal.png', '../image/alcohol.jpg', '../image/window.jpg', '../image/sleep.png']
         self.img = Image.open(img_name[state])
         self.img.thumbnail((self.width, self.height), Image.ANTIALIAS)
         self.img = ImageTk.PhotoImage(self.img)

@@ -23,7 +23,7 @@ class Display():
         #self.window.state('zoomed')
         self.width = self.window.winfo_screenwidth()
         self.height = self.window.winfo_screenheight()
-        self.img = Image.open('../image/alcohol.jpg')
+        self.img = Image.open('/home/pi/mirs/detect/image/sleep.png')
         self.img.thumbnail((self.width, self.height), Image.ANTIALIAS)
         self.img = ImageTk.PhotoImage(self.img)
         self.canvas = tk.Canvas(self.window, width=self.width, height=self.height)
@@ -37,8 +37,8 @@ class Display():
     # @param state タピ郎の走行状態
     # @return None
     def changeImage(self, state: int):
-        img_name = ['../image/normal.png', '../image/normal.png', '../image/alcohol.jpg', '../image/window.jpg', '../image/sleep.png']
-        self.img = Image.open(img_name[state])
+        img_name = ['sleep.png', 'normal.png', 'normal.png', 'find.png', 'normal.png', 'onegai.png']
+        self.img = Image.open('/home/pi/mirs/detect/image/' + img_name[state])
         self.img.thumbnail((self.width, self.height), Image.ANTIALIAS)
         self.img = ImageTk.PhotoImage(self.img)
         self.canvas.itemconfig(self.item, image=self.img)

@@ -28,26 +28,28 @@ def main():
     thread.setDaemon(True)
     thread.start()
 
-    i = 0
     state_before = 0
     while True:
-        i += 1
-        motor_power = detecter.detect() + 128
+        motor_power, target_dist = detecter.detect()
 
         # 走行プログラムと送信
-        sock.sendall(motor_power.to_bytes(2, 'big'))
-        byte_data = sock.recv(2)
-        print(byte_data)
-        state = int.from_bytes(byte_data, 'big')
+        sock.sendall(motor_power.to_bytes(2, 'big') + target_dist.to_bytes(2, 'big'))
+        byte_data = sock.recv(4)
+        #print(byte_data)
+        state = int.from_bytes(byte_data[:2], 'big')
+        ad_flag = int.from_bytes(byte_data[2:], 'big')
 
-        print(state)
+        #print(state)
         if state != state_before:
             dp.changeImage(state)
-            ad.play(state)
+            if ad_flag == 1:
+                if state_before == 0:
+                    ad.play(0)
+                elif state == 5:
+                    ad.play(1)
+                elif state_before == 5:
+                    ad.play(2)
         state_before = state
-
-        if i > 100:
-            break
 
 
 if __name__ == '__main__':

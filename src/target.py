@@ -19,16 +19,17 @@ class Target():
     # @param target_array 人のバウンディングボックスの中心点のx座標、横縦の大きさ
     # @return power 左右のタイヤのPWM調整値
     def setTarget(self, target_array):
-        max_height = 0.0
+        max_width = 0.0
         target_num = -1
         for i, target in enumerate(target_array):
-            if target[1] > max_height:
+            if target[1] > max_width:
                 target_num = i
         if target_num >= 0:
             power = self.adjustMotor(target_array[target_num][0])
-            return power
+            dist = target_array[target_num][1]
+            return power, dist * 100
         else:
-            return 0
+            return 0, 0
 
     ##
     # @brief モータPWM値調整メソッド

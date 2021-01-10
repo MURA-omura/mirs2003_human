@@ -16,13 +16,15 @@ class Audio():
     # @details 鳴らす音声の読み込みを行う。
     # @return None
     def __init__(self):
-        self.wave = sa.WaveObject.from_wave_file('../audio/wave.wav')
+        self.waves = [sa.WaveObject.from_wave_file('/home/pi/mirs/detect/audio/wake.wav'),
+                        sa.WaveObject.from_wave_file('/home/pi/mirs/detect/audio/shodoku.wav'),
+                        sa.WaveObject.from_wave_file('/home/pi/mirs/detect/audio/thanks.wav')]
 
     ##
     # @brief 再生関数
     # @details タピ郎の状態が変化したときに指定の音声を再生する。
     # @param state タピ郎の走行状態
     # @return None
-    def play(self, state):
-        pl = self.wave.play()
+    def play(self, num):
+        pl = self.waves[num].play()
         #pl.wait_done()
